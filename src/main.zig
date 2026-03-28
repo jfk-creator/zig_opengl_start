@@ -19,6 +19,11 @@ pub fn main() !void {
     }
 
     const window = c.glfwCreateWindow(800, 600, "Zig OpenGL Starter", null, null) orelse return error.WindowFailed;
+    defer {
+        c.glfwMakeContextCurrent(null);
+        c.glfwDestroyWindow(window);
+        c.glfwPollEvents();
+    }
     c.glfwMakeContextCurrent(window);
     c.glfwSwapInterval(1);
     renderer.init();
