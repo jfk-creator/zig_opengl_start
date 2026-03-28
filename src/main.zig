@@ -73,6 +73,9 @@ pub fn main() !void {
 
         renderer.beginFrame(width, height, camera_pos, camera_zoom);
 
+        renderer.drawCircle(
+            Vec2.init(100, 100), Vec2.init(150, 150), Vec2.init(0.5, 0.5), 0, Vec4.init(0.8, 0.0, 1, 1));
+
         renderer.drawRect(
             Vec2.init(0, 0), 
             Vec2.init(100, 100), 
