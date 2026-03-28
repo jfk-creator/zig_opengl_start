@@ -33,6 +33,7 @@ var shader_program: c.GLuint = 0;
 var u_model_loc: c.GLint = 0;
 var u_proj_loc: c.GLint = 0;
 var u_color_loc: c.GLint = 0;
+var u_view_loc: c.GLint = 0;
 var vao: c.GLuint = 0;
 var vbo: c.GLuint = 0;
 
@@ -40,8 +41,12 @@ const vertex_shader_src =
     \\#version 330 core
     \\layout (location = 0) in vec2 aPos;
     \\uniform mat4 uModel;
+    \\uniform mat4 uView;  // <-- NEU
     \\uniform mat4 uProj;
-    \\void main() { gl_Position = uProj * uModel * vec4(aPos, 0.0, 1.0); }
+    \\void main() {
+    \\    // Reihenfolge ist extrem wichtig: Proj * View * Model
+    \\    gl_Position = uProj * uView * uModel * vec4(aPos, 0.0, 1.0);
+    \\}
 ;
 
 const fragment_shader_src =
@@ -71,6 +76,7 @@ pub fn init() void {
     u_model_loc = c.glGetUniformLocation(shader_program, "uModel");
     u_proj_loc = c.glGetUniformLocation(shader_program, "uProj");
     u_color_loc = c.glGetUniformLocation(shader_program, "uColor");
+    u_view_loc = c.glGetUniformLocation(shader_program, "uView"); 
 
     c.glGenVertexArrays(1, &vao);
     c.glGenBuffers(1, &vbo);
@@ -81,15 +87,21 @@ pub fn init() void {
     c.glEnableVertexAttribArray(0);
 }
 
-pub fn beginFrame(width: c_int, height: c_int) void {
+pub fn beginFrame(width: c_int, height: c_int, cam_pos: Vec2, cam_zoom: f32) void {
     c.glViewport(0, 0, width, height);
     c.glClearColor(0.1, 0.1, 0.15, 1.0);
     c.glClear(c.GL_COLOR_BUFFER_BIT);
     c.glUseProgram(shader_program);
     c.glBindVertexArray(vao);
 
-    const proj = math.ortho(0.0, @floatFromInt(width), @floatFromInt(height), 0.0);
+    const wf: f32 = @floatFromInt(width);
+    const hf: f32 = @floatFromInt(height);
+
+    const proj = math.ortho(0.0, wf, hf, 0.0);
     c.glUniformMatrix4fv(u_proj_loc, 1, c.GL_FALSE, &proj[0]);
+
+    const view = math.getViewMatrix(cam_pos, cam_zoom, wf, hf);
+    c.glUniformMatrix4fv(u_view_loc, 1, c.GL_FALSE, &view[0]);
 }
 
 fn drawShape(offset: c.GLint, count: c.GLsizei, pos: Vec2, size: Vec2, origin: Vec2, rot: f32, color: Vec4) void {
