@@ -1,5 +1,5 @@
 const std = @import("std");
-const Vec2 = @import("vec2.zig").Vec2;
+const Vec2 = @import("vec.zig").Vec2;
 
 pub fn ortho(left: f32, right: f32, bottom: f32, top: f32) [16]f32 {
     var m = std.mem.zeroes([16]f32);

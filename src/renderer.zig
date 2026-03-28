@@ -2,8 +2,8 @@ const std = @import("std");
 const builtin = @import("builtin");
 const c = @import("c.zig").c;
 
-const Vec2 = @import("vec2.zig").Vec2;
-const Vec4 = @import("vec4.zig").Vec4;
+const Vec2 = @import("vec.zig").Vec2;
+const Vec4 = @import("vec.zig").Vec4;
 const math = @import("mathHelper.zig");
 
 const tri_verts = [_]Vec2{ Vec2.init(0.0, 0.5), Vec2.init(-0.5, -0.5), Vec2.init(0.5, -0.5) };

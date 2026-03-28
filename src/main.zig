@@ -1,8 +1,8 @@
 const builtin = @import("builtin");
 const c = @import("c.zig").c;
 
-const Vec2 = @import("vec2.zig").Vec2;
-const Vec4 = @import("vec4.zig").Vec4;
+const Vec2 = @import("vec.zig").Vec2;
+const Vec4 = @import("vec.zig").Vec4;
 const renderer = @import("renderer.zig");
 const input = @import("input.zig");
 
@@ -29,7 +29,7 @@ pub fn main() !void {
     renderer.init();
 
     // Update Helper
-    const dt: f32 = 1.0 / 60.0; // Update@60fps 
+    const dt: f32 = 1.0 / 144.0; // Update@60fps 
     var accumulator: f32 = 0.0;
 
     var player_pos = Vec2.init(400, 300);
